@@ -19,13 +19,12 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'master'
+          channel: 'stable'  # Changed from 'master' to 'stable'
+          flutter-version: '3.22.0'  # Use a specific stable version
 
       - name: Clean everything
         run: |
           flutter clean
-          rm -rf ~/.pub-cache/hosted/pub.dev/flutter_riverpod-*
-          rm -rf ~/.pub-cache/hosted/pub.dev/riverpod-*
           rm -rf pubspec.lock
           rm -rf ios/Pods
           rm -rf ios/Podfile.lock
@@ -33,14 +32,13 @@ jobs:
       - name: Install project dependencies
         run: |
           flutter pub get
-          flutter pub add flutter_riverpod:2.4.0 --exact
 
       - name: Install CocoaPods dependencies
         working-directory: ios
         run: pod install
 
       - name: Build iOS Simulator app
-        run: flutter build ios --debug --simulator --no-codesign -v
+        run: flutter build ios --debug --simulator --no-codesign
 
       - name: Create .zip for Appetize
         run: |
