@@ -21,8 +21,8 @@ dependencies:
   # mobile_scanner: 7.4.0 requires Dart >=3.7.0 → Use 3.0.0
   mobile_scanner: ^3.0.0
   
-  # flutter_riverpod: FORCE exact version 2.4.0
-  flutter_riverpod: 2.4.0  # Exact version, not ^
+  # flutter_riverpod: Use exact version 2.4.0
+  flutter_riverpod: 2.4.0
   
   http: ^1.6.0
   
@@ -38,8 +38,8 @@ dependencies:
   # permission_handler: 12.0.3 requires Dart >=3.10.0 → Use 11.3.1
   permission_handler: ^11.3.1
   
-  # intl: MUST be 0.19.0 to match flutter_localizations
-  intl: ^0.19.0
+  # intl: Updated to match flutter_localizations requirement
+  intl: ^0.20.3  # Changed from 0.19.0 to 0.20.3
   
   awesome_snackbar_content: ^0.1.1
   shimmer: ^3.0.0
