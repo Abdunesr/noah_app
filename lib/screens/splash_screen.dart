@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utils/colors.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/responsive_mockup.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -82,47 +83,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
     final authState = ref.watch(authProvider);
     if (_timerFinished && !authState.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _checkAndNavigate());
     }
 
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {

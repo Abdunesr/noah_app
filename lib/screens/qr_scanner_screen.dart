@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../utils/colors.dart';
 
+import '../widgets/responsive_mockup.dart';
+
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
 
@@ -27,41 +29,9 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {

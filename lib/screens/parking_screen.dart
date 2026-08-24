@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/shimmer_parking_card.dart';
@@ -10,6 +11,7 @@ import '../widgets/shimmer_stats_card.dart';
 import 'qr_scanner_screen.dart';
 import '../providers/parking_provider.dart';
 import '../models/parking_spot_model.dart';
+import '../widgets/responsive_mockup.dart';
 
 class ParkingScreen extends ConsumerStatefulWidget {
   const ParkingScreen({super.key});
@@ -23,44 +25,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(
-          0xFF1E2022,
-        ), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -311,9 +278,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                 constraints: const BoxConstraints(),
               ),
               const SizedBox(width: 16),
-              const Text(
-                'Estate Flow',
-                style: TextStyle(
+              Text(
+                context.tr('Estate Flow'),
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryGreen, // Green page title
@@ -391,9 +358,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'TOTAL AVAILABILITY',
-                style: TextStyle(
+              Text(
+                context.tr('TOTAL AVAILABILITY'),
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1B3D00), // Dark green
@@ -414,9 +381,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  const Text(
-                    'spaces',
-                    style: TextStyle(
+                  Text(
+                    context.tr('spaces'),
+                    style: const TextStyle(
                       fontSize: 18,
                       color: Color(0xFF0F1E01),
                       fontWeight: FontWeight.bold,
@@ -425,11 +392,13 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              const SizedBox(
+              SizedBox(
                 width: 220,
                 child: Text(
-                  'Real-time parking availability across all building levels.',
-                  style: TextStyle(
+                  context.tr(
+                    'Real-time parking availability across all building levels.',
+                  ),
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF1B3D00), // Dark green text
                     height: 1.35,
@@ -455,19 +424,23 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
               color: const Color(0xFFF5F6F8), // Light gray-blue, no border!
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.search, color: AppColors.textSecondary, size: 20),
-                SizedBox(width: 12),
+                const Icon(
+                  Icons.search,
+                  color: AppColors.textSecondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: TextField(
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textPrimary,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Search locations...',
-                      hintStyle: TextStyle(
+                      hintText: context.tr('Search locations...'),
+                      hintStyle: const TextStyle(
                         color: AppColors.textHint,
                         fontSize: 14,
                       ),
@@ -505,9 +478,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Parking Locations',
-          style: TextStyle(
+        Text(
+          context.tr('Parking Locations'),
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0D0F0C),
@@ -517,9 +490,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
           onTap: () {
             // View Map action
           },
-          child: const Text(
-            'View Map',
-            style: TextStyle(
+          child: Text(
+            context.tr('View Map'),
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryGreen,
@@ -532,12 +505,12 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
 
   Widget _buildLocationsList(List<ParkingSpotModel> spots) {
     if (spots.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
-            'No parking spots found.',
-            style: TextStyle(color: AppColors.textSecondary),
+            context.tr('No parking spots found.'),
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
         ),
       );
@@ -665,16 +638,16 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                 ),
               ],
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.history,
                   color: Color(0xFF1E3A8A), // Dark blue
                   size: 24,
                 ),
-                SizedBox(height: 12),
-                Text(
+                const SizedBox(height: 12),
+                const Text(
                   '2.4h',
                   style: TextStyle(
                     fontSize: 22,
@@ -682,10 +655,10 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'Avg. Stay',
-                  style: TextStyle(
+                  context.tr('Avg. Stay'),
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -712,16 +685,16 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                 ),
               ],
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.payments_outlined,
                   color: AppColors.primaryGreen, // Green
                   size: 24,
                 ),
-                SizedBox(height: 12),
-                Text(
+                const SizedBox(height: 12),
+                const Text(
                   '\$12.50',
                   style: TextStyle(
                     fontSize: 22,
@@ -729,10 +702,10 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  'Dues',
-                  style: TextStyle(
+                  context.tr('Dues'),
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
@@ -763,9 +736,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         icon: const Icon(Icons.qr_code_scanner, color: Colors.white, size: 18),
-        label: const Text(
-          'Scan QR',
-          style: TextStyle(
+        label: Text(
+          context.tr('Scan QR'),
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 13,
@@ -839,7 +812,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  isValid ? 'Scan Successful' : 'Validation Failed',
+                  isValid
+                      ? context.tr('Scan Successful')
+                      : context.tr('Validation Failed'),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -919,9 +894,9 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
+                    child: Text(
+                      context.tr('Done'),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -1027,7 +1002,7 @@ class _ParkingScreenState extends ConsumerState<ParkingScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        spot.status,
+                        context.tr(spot.status),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

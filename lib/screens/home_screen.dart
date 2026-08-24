@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import '../providers/calendar_event_provider.dart';
+import '../providers/locale_provider.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/responsive_mockup.dart';
 import '../models/calendar_event_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -19,48 +22,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     final authState = ref.watch(authProvider);
-    final userName = authState.user?.name ?? 'Alex';
+    final userName = (authState.user?.name ?? 'Alex')
+        .trim()
+        .split(RegExp(r'\s+'))
+        .take(2)
+        .join(' ');
 
-    Widget screenContent = _buildScreenContent(context, userName);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(
-          0xFF1E2022,
-        ), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(child: _buildScreenContent(context, userName));
   }
 
   Widget _buildScreenContent(BuildContext context, String userName) {
@@ -89,8 +58,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     _buildAnnouncementsCard(),
                     const SizedBox(height: 14),
                     _buildCalendarCard(),
-                    const SizedBox(height: 20),
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -157,7 +124,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
               ),
-              const SizedBox(width: 18),
+              const SizedBox(width: 12),
+              // Dropdown in the middle
+              _buildLanguageDropdown(context),
+              const SizedBox(width: 12),
               // Notification Bell Icon (Green)
               IconButton(
                 onPressed: () {},
@@ -176,6 +146,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  Widget _buildLanguageDropdown(BuildContext context) {
+    final currentLocale = ref.watch(localeProvider);
+    return Theme(
+      data: Theme.of(context).copyWith(cardColor: AppColors.primaryWhite),
+      child: PopupMenuButton<String>(
+        offset: const Offset(0, 36),
+        tooltip: 'Select Language',
+        icon: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.language, color: AppColors.primaryGreen, size: 24),
+            const SizedBox(width: 4),
+            Text(
+              currentLocale.languageCode.toUpperCase(),
+              style: const TextStyle(
+                color: AppColors.primaryGreen,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
+        onSelected: (String newValue) {
+          ref.read(localeProvider.notifier).setLocale(Locale(newValue));
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          const PopupMenuItem<String>(
+            value: 'en',
+            child: Text(
+              'EN',
+              style: TextStyle(
+                color: AppColors.primaryBlack,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const PopupMenuItem<String>(
+            value: 'am',
+            child: Text(
+              'AM',
+              style: TextStyle(
+                color: AppColors.primaryBlack,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const PopupMenuItem<String>(
+            value: 'om',
+            child: Text(
+              'OM',
+              style: TextStyle(
+                color: AppColors.primaryBlack,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDashboardRow(String userName) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,9 +221,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'DASHBOARD',
-              style: TextStyle(
+            Text(
+              context.tr('DASHBOARD'),
+              style: const TextStyle(
                 fontSize: 11,
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.bold,
@@ -196,7 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Welcome back, $userName',
+              '${context.tr('Welcome back, ')}$userName',
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -209,9 +245,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const Text(
-              'Unpaid Bill Amount',
-              style: TextStyle(
+            Text(
+              context.tr('Unpaid Bill Amount'),
+              style: const TextStyle(
                 fontSize: 10,
                 color: AppColors.textSecondary,
                 fontWeight: FontWeight.w500,
@@ -323,50 +359,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildBannerContent(String dateText) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF85B842),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Info circle icon
-          Container(
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-              color: Color(0xFF2A4505),
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/calendar');
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF85B842),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
-            child: const Icon(
-              Icons.info_outline,
-              color: Color(0xFF85B842),
-              size: 16,
-            ),
-          ),
-          const SizedBox(width: 14),
-          // Banner text
-          Expanded(
-            child: Text(
-              'Next inspection scheduled for $dateText',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF0F1E01),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Info circle icon
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: const BoxDecoration(
+                color: Color(0xFF2A4505),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.info_outline,
+                color: Color(0xFF85B842),
+                size: 16,
               ),
             ),
-          ),
-          // Right arrow icon
-          const Icon(Icons.chevron_right, color: Color(0xFF0F1E01), size: 22),
-        ],
+            const SizedBox(width: 14),
+            // Banner text
+            Expanded(
+              child: Text(
+                '${context.tr('Next inspection scheduled for ')}$dateText',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0F1E01),
+                ),
+              ),
+            ),
+            // Right arrow icon
+            const Icon(Icons.chevron_right, color: Color(0xFF0F1E01), size: 22),
+          ],
+        ),
       ),
     );
   }
@@ -381,32 +422,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       childAspectRatio: 1.15,
       children: [
         _buildQuickActionCard(
-          title: 'Bills & Invoices',
-          subtitle: 'View history',
+          title: context.tr('Bills & Invoices'),
+          subtitle: context.tr('View history'),
           icon: Icons.credit_card_outlined,
           iconColor: const Color(0xFF3E6A0D),
           circleBgColor: const Color(0xFFE8F5E9),
           route: '/bills',
         ),
         _buildQuickActionCard(
-          title: 'Water',
-          subtitle: 'Usage reports',
+          title: context.tr('Water'),
+          subtitle: context.tr('Usage reports'),
           icon: Icons.opacity,
           iconColor: const Color(0xFF1E88E5),
           circleBgColor: const Color(0xFFE3F2FD),
           route: '/water',
         ),
         _buildQuickActionCard(
-          title: 'Parking',
-          subtitle: 'Spot B-12',
+          title: context.tr('Parking'),
+          subtitle: context.tr('Spot B-12'),
           icon: Icons.directions_car_outlined,
           iconColor: const Color(0xFF546E7A),
           circleBgColor: const Color(0xFFECEFF1),
           route: '/parking',
         ),
         _buildQuickActionCard(
-          title: 'Maintenance',
-          subtitle: 'New request',
+          title: context.tr('Maintenance'),
+          subtitle: context.tr('New request'),
           icon: Icons.construction_outlined,
           iconColor: const Color(0xFF43A047),
           circleBgColor: const Color(0xFFF1F8E9),
@@ -512,22 +553,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(width: 14),
             // Text Details
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Marketplace',
-                    style: TextStyle(
+                    context.tr('Marketplace'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    'Buy & sell within the community',
-                    style: TextStyle(
+                    context.tr('Buy & sell within the community'),
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),
@@ -583,22 +624,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(width: 14),
             // Text Details
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Announcements',
-                    style: TextStyle(
+                    context.tr('Announcements'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    'Elevator maintenance on floor 4...',
-                    style: TextStyle(
+                    context.tr('Elevator maintenance on floor 4...'),
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),
@@ -654,22 +695,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(width: 14),
             // Text Details
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Calendar',
-                    style: TextStyle(
+                    context.tr('Events'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    'Check community events',
-                    style: TextStyle(
+                    context.tr('Check community events'),
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),

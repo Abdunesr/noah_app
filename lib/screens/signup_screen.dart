@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
 import '../utils/text_styles.dart';
+import '../utils/localizations.dart';
 import '../widgets/brand_header.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
@@ -53,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 16),
               _buildSignInLink(),
               const SizedBox(height: 16),
-              const OrDivider(text: 'OR REGISTER WITH'),
+              OrDivider(text: context.tr('OR REGISTER WITH')),
               const SizedBox(height: 16),
               _buildSocialButtons(),
               const SizedBox(height: 30),
@@ -66,12 +67,12 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildCreateAccountSection() {
-    return const Column(
+    return Column(
       children: [
-        Text('Create Account', style: AppTextStyles.headingLarge),
-        SizedBox(height: 4),
+        Text(context.tr('Create Account'), style: AppTextStyles.headingLarge),
+        const SizedBox(height: 4),
         Text(
-          'Join Estate Flow to manage your properties with ease',
+          context.tr('Join Estate Flow to manage your properties with ease'),
           textAlign: TextAlign.center,
           style: AppTextStyles.bodyRegular,
         ),
@@ -84,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: _fullNameController,
       hintText: 'John Doe',
       prefixIcon: Icons.person_outline,
-      labelText: 'FULL NAME',
+      labelText: context.tr('FULL NAME'),
     );
   }
 
@@ -93,7 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: _emailController,
       hintText: 'john@example.com',
       prefixIcon: Icons.mail_outline,
-      labelText: 'EMAIL ADDRESS',
+      labelText: context.tr('EMAIL ADDRESS'),
       keyboardType: TextInputType.emailAddress,
     );
   }
@@ -103,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: _phoneController,
       hintText: '+1 (555) 000-0000',
       prefixIcon: Icons.call_outlined,
-      labelText: 'PHONE NUMBER',
+      labelText: context.tr('PHONE NUMBER'),
       keyboardType: TextInputType.phone,
     );
   }
@@ -113,7 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
       controller: _passwordController,
       hintText: '••••••••',
       prefixIcon: Icons.lock_outline,
-      labelText: 'PASSWORD',
+      labelText: context.tr('PASSWORD'),
       obscureText: _obscurePassword,
       suffixIcon: IconButton(
         icon: Icon(
@@ -159,24 +160,24 @@ class _SignupScreenState extends State<SignupScreen> {
                 fontSize: 13,
                 color: AppColors.textSecondary,
               ),
-              children: const [
-                TextSpan(text: 'I agree to the '),
+              children: [
+                TextSpan(text: context.tr('I agree to the ')),
                 TextSpan(
-                  text: 'Terms & Conditions',
-                  style: TextStyle(
+                  text: context.tr('Terms & Conditions'),
+                  style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                TextSpan(text: ' and '),
+                TextSpan(text: context.tr(' and ')),
                 TextSpan(
-                  text: 'Privacy Policy',
-                  style: TextStyle(
+                  text: context.tr('Privacy Policy'),
+                  style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                TextSpan(text: '.'),
+                const TextSpan(text: '.'),
               ],
             ),
           ),
@@ -187,7 +188,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _buildCreateAccountButton() {
     return CustomButton(
-      text: 'Create Account',
+      text: context.tr('Create Account'),
       onPressed: () {
         // TODO: Implement signup logic
       },
@@ -198,17 +199,17 @@ class _SignupScreenState extends State<SignupScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          "Already have an account?",
-          style: TextStyle(color: AppColors.textSecondary),
+        Text(
+          context.tr("Already have an account?"),
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, '/login');
           },
-          child: const Text(
-            'Sign In',
-            style: TextStyle(
+          child: Text(
+            context.tr('Sign In'),
+            style: const TextStyle(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
@@ -219,22 +220,22 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget _buildSocialButtons() {
-    return const Row(
+    return Row(
       children: [
-        SocialButton(label: 'GOOGLE', icon: Icons.g_mobiledata),
-        SizedBox(width: 12),
-        SocialButton(label: 'APPLE', icon: Icons.apple),
+        SocialButton(label: context.tr('GOOGLE'), icon: Icons.g_mobiledata),
+        const SizedBox(width: 12),
+        SocialButton(label: context.tr('APPLE'), icon: Icons.apple),
       ],
     );
   }
 
   Widget _buildHelpText() {
     return RichText(
-      text: const TextSpan(
+      text: TextSpan(
         style: AppTextStyles.helpText,
         children: [
-          TextSpan(text: 'Need help? Contact support '),
-          TextSpan(text: '@estatesflow.com', style: AppTextStyles.helpEmail),
+          TextSpan(text: context.tr('Need help? Contact support ')),
+          const TextSpan(text: '@estatesflow.com', style: AppTextStyles.helpEmail),
         ],
       ),
     );

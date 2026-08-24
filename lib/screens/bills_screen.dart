@@ -1,7 +1,9 @@
 // lib/screens/bills_screen.dart
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../widgets/responsive_mockup.dart';
 
 class BillsScreen extends StatefulWidget {
   const BillsScreen({super.key});
@@ -15,44 +17,9 @@ class _BillsScreenState extends State<BillsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(
-          0xFF1E2022,
-        ), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -125,9 +92,9 @@ class _BillsScreenState extends State<BillsScreen> {
                 constraints: const BoxConstraints(),
               ),
               const SizedBox(width: 16),
-              const Text(
-                'Bills & Invoices',
-                style: TextStyle(
+              Text(
+                context.tr('Bills & Invoices'),
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF0D0F0C),
@@ -154,9 +121,9 @@ class _BillsScreenState extends State<BillsScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Current Month',
-          style: TextStyle(
+        Text(
+          context.tr('Current Month'),
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0D0F0C),
@@ -195,9 +162,9 @@ class _BillsScreenState extends State<BillsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total Due',
-                style: TextStyle(
+              Text(
+                context.tr('Total Due'),
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondary,
                   fontWeight: FontWeight.w500,
@@ -212,17 +179,17 @@ class _BillsScreenState extends State<BillsScreen> {
                   color: const Color(0xFFFFEBEC), // Light red badge background
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.warning_amber_rounded,
                       color: Color(0xFFD32F2F),
                       size: 13,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
-                      'Unpaid',
-                      style: TextStyle(
+                      context.tr('Unpaid'),
+                      style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFD32F2F),
@@ -254,22 +221,22 @@ class _BillsScreenState extends State<BillsScreen> {
               color: AppColors.screenBackground, // Light gray
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_today_outlined,
                   color: AppColors.textSecondary,
                   size: 16,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
-                  'Due Date: ',
-                  style: TextStyle(
+                  context.tr('Due Date: '),
+                  style: const TextStyle(
                     fontSize: 13,
                     color: AppColors.textSecondary,
                   ),
                 ),
-                Text(
+                const Text(
                   'Oct 30, 2023',
                   style: TextStyle(
                     fontSize: 13,
@@ -297,9 +264,9 @@ class _BillsScreenState extends State<BillsScreen> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Pay Now',
-                style: TextStyle(
+              child: Text(
+                context.tr('Pay Now'),
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -348,18 +315,18 @@ class _BillsScreenState extends State<BillsScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Auto-pay',
-                  style: TextStyle(
+                Text(
+                  context.tr('Auto-pay'),
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 2),
-                const Text(
-                  'Disabled',
-                  style: TextStyle(
+                Text(
+                  context.tr('Disabled'),
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -404,18 +371,18 @@ class _BillsScreenState extends State<BillsScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Invoices',
-                  style: TextStyle(
+                Text(
+                  context.tr('Invoices'),
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 2),
-                const Text(
-                  '12 Annual',
-                  style: TextStyle(
+                Text(
+                  context.tr('12 Annual'),
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -433,9 +400,9 @@ class _BillsScreenState extends State<BillsScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Bill History',
-          style: TextStyle(
+        Text(
+          context.tr('Bill History'),
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0D0F0C),
@@ -448,7 +415,7 @@ class _BillsScreenState extends State<BillsScreen> {
           child: Row(
             children: [
               Text(
-                'Filter ',
+                context.tr('Filter '),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
@@ -549,7 +516,7 @@ class _BillsScreenState extends State<BillsScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      bill['description'],
+                      context.tr(bill['description']),
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
@@ -559,7 +526,7 @@ class _BillsScreenState extends State<BillsScreen> {
                 ),
               ),
 
-              // Right Column (Amount + Status Badge)
+              // Right Amount Column
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -572,19 +539,21 @@ class _BillsScreenState extends State<BillsScreen> {
                     ),
                   ),
                   const SizedBox(height: 6),
+
+                  // Status Badge
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
+                      horizontal: 8,
+                      vertical: 3,
                     ),
                     decoration: BoxDecoration(
                       color: bill['statusBg'],
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(100),
                     ),
                     child: Text(
-                      bill['status'],
+                      context.tr(bill['status']),
                       style: TextStyle(
-                        fontSize: 9,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                         color: bill['statusText'],
                       ),

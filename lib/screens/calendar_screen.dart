@@ -8,6 +8,7 @@ import '../widgets/bottom_nav_bar.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/shimmer_calendar_grid.dart';
 import '../widgets/shimmer_event_card.dart';
+import '../widgets/responsive_mockup.dart';
 
 class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
@@ -43,42 +44,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -616,20 +584,29 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
         final day = eventDate.day.toString().padLeft(2, '0');
         final monthName = _getMonthAbbreviation(eventDate.month);
 
-        // Format time (remove seconds)
-        String timeStr = event.time;
-        if (timeStr.length >= 5) {
-          timeStr = timeStr.substring(0, 5);
-        }
+        // Format time safely (handle null event.time)
+        String formattedTime = 'All Day';
+        if (event.time != null && event.time!.isNotEmpty) {
+          try {
+            String timeStr = event.time!;
+            if (timeStr.length >= 5) {
+              timeStr = timeStr.substring(0, 5);
+            }
 
-        // Format time to 12-hour format
-        final timeParts = timeStr.split(':');
-        int hour = int.parse(timeParts[0]);
-        final minute = timeParts[1];
-        final amPm = hour >= 12 ? 'PM' : 'AM';
-        if (hour > 12) hour -= 12;
-        if (hour == 0) hour = 12;
-        final formattedTime = '$hour:$minute $amPm';
+            // Format time to 12-hour format
+            final timeParts = timeStr.split(':');
+            if (timeParts.length >= 2) {
+              int hour = int.parse(timeParts[0]);
+              final minute = timeParts[1];
+              final amPm = hour >= 12 ? 'PM' : 'AM';
+              if (hour > 12) hour -= 12;
+              if (hour == 0) hour = 12;
+              formattedTime = '$hour:$minute $amPm';
+            }
+          } catch (e) {
+            formattedTime = event.time!;
+          }
+        }
 
         // Get category badge color
         final badgeInfo = _getCategoryBadgeInfo(event.category);
@@ -776,18 +753,27 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
     final day = eventDate.day.toString().padLeft(2, '0');
     final year = eventDate.year;
 
-    // Format time
-    String timeStr = event.time;
-    if (timeStr.length >= 5) {
-      timeStr = timeStr.substring(0, 5);
+    // Format time safely
+    String formattedTime = 'All Day';
+    if (event.time != null && event.time!.isNotEmpty) {
+      try {
+        String timeStr = event.time!;
+        if (timeStr.length >= 5) {
+          timeStr = timeStr.substring(0, 5);
+        }
+        final timeParts = timeStr.split(':');
+        if (timeParts.length >= 2) {
+          int hour = int.parse(timeParts[0]);
+          final minute = timeParts[1];
+          final amPm = hour >= 12 ? 'PM' : 'AM';
+          if (hour > 12) hour -= 12;
+          if (hour == 0) hour = 12;
+          formattedTime = '$hour:$minute $amPm';
+        }
+      } catch (e) {
+        formattedTime = event.time!;
+      }
     }
-    final timeParts = timeStr.split(':');
-    int hour = int.parse(timeParts[0]);
-    final minute = timeParts[1];
-    final amPm = hour >= 12 ? 'PM' : 'AM';
-    if (hour > 12) hour -= 12;
-    if (hour == 0) hour = 12;
-    final formattedTime = '$hour:$minute $amPm';
 
     final badgeInfo = _getCategoryBadgeInfo(event.category);
 

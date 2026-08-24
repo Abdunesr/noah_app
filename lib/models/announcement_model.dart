@@ -38,17 +38,17 @@ class Announcement {
     return Announcement(
       id: json['id'] as int,
       propertyId: json['property_id'] as int,
-      title: json['title'] as String,
-      content: json['content'] as String,
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
       excerpt: json['excerpt'] as String?,
-      category: json['category'] as String,
-      priority: json['priority'] as String,
-      pinned: json['pinned'] as bool,
-      viewsCount: json['views_count'] as int,
-      authorUserId: json['author_user_id'] as int,
-      publishedAt: json['published_at'] as String,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      category: json['category'] as String? ?? '',
+      priority: json['priority'] as String? ?? '',
+      pinned: json['pinned'] as bool? ?? false,
+      viewsCount: json['views_count'] as int? ?? 0,
+      authorUserId: json['author_user_id'] as int? ?? 0,
+      publishedAt: json['published_at'] as String? ?? '',
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
       property: json['property'] != null
           ? Property.fromJson(json['property'] as Map<String, dynamic>)
           : null,
@@ -90,8 +90,8 @@ class Property {
   final String phone;
   final String email;
   final String established;
-  final String coverImage;
-  final String logo;
+  final String? coverImage;
+  final String? logo;
   final String createdAt;
   final String updatedAt;
 
@@ -106,8 +106,8 @@ class Property {
     required this.phone,
     required this.email,
     required this.established,
-    required this.coverImage,
-    required this.logo,
+    this.coverImage,
+    this.logo,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -115,19 +115,19 @@ class Property {
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
       id: json['id'] as int,
-      name: json['name'] as String,
-      code: json['code'] as String,
-      address: json['address'] as String,
-      city: json['city'] as String,
-      country: json['country'] as String,
-      postalCode: json['postal_code'] as String,
-      phone: json['phone'] as String,
-      email: json['email'] as String,
-      established: json['established'] as String,
-      coverImage: json['cover_image'] as String,
-      logo: json['logo'] as String,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      name: json['name'] as String? ?? '',
+      code: json['code'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      country: json['country'] as String? ?? '',
+      postalCode: json['postal_code'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      established: json['established'] as String? ?? '',
+      coverImage: json['cover_image'] as String?,
+      logo: json['logo'] as String?,
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
     );
   }
 
@@ -177,14 +177,14 @@ class Author {
   factory Author.fromJson(Map<String, dynamic> json) {
     return Author(
       id: json['id'] as int,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      phone: json['phone'] as String,
-      status: json['status'] as String,
-      lastActiveAt: json['last_active_at'] as String,
+      name: json['name'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      status: json['status'] as String? ?? '',
+      lastActiveAt: json['last_active_at'] as String? ?? '',
       emailVerifiedAt: json['email_verified_at'],
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
     );
   }
 
@@ -202,3 +202,4 @@ class Author {
     };
   }
 }
+

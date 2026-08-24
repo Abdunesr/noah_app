@@ -8,6 +8,7 @@ import 'marketplace_detail_screen.dart';
 import 'marketplace_create_listing_screen.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/shimmer_listing_card.dart';
+import '../widgets/responsive_mockup.dart';
 
 class MarketplaceScreen extends ConsumerStatefulWidget {
   const MarketplaceScreen({super.key});
@@ -45,38 +46,9 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
   Widget build(BuildContext context) {
     final marketplaceState = ref.watch(marketplaceProvider);
 
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context, marketplaceState);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022),
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(color: const Color(0xFF8E9196), width: 10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context, marketplaceState),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context, MarketplaceState state) {

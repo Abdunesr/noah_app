@@ -1,6 +1,7 @@
 // lib/widgets/bottom_nav_bar.dart
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -14,8 +15,10 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double bottomPadding = MediaQuery.of(context).padding.bottom;
     return Container(
-      height: 72,
+      height: 72 + bottomPadding,
+      padding: EdgeInsets.only(bottom: bottomPadding),
       decoration: BoxDecoration(
         color: AppColors.primaryWhite,
         boxShadow: [
@@ -31,6 +34,7 @@ class BottomNavBar extends StatelessWidget {
         children: [
           Expanded(
             child: _buildNavItem(
+              context: context,
               index: 0,
               icon: const Icon(Icons.home_outlined),
               selectedIcon: const Icon(Icons.home),
@@ -39,6 +43,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           Expanded(
             child: _buildNavItem(
+              context: context,
               index: 1,
               icon: const Icon(Icons.description_outlined),
               selectedIcon: const Icon(Icons.description),
@@ -47,6 +52,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           Expanded(
             child: _buildNavItem(
+              context: context,
               index: 2,
               icon: const Text(
                 'P',
@@ -69,6 +75,7 @@ class BottomNavBar extends StatelessWidget {
           ),
           Expanded(
             child: _buildNavItem(
+              context: context,
               index: 3,
               icon: const Icon(Icons.person_outline),
               selectedIcon: const Icon(Icons.person),
@@ -81,6 +88,7 @@ class BottomNavBar extends StatelessWidget {
   }
 
   Widget _buildNavItem({
+    required BuildContext context,
     required int index,
     required Widget icon,
     required Widget selectedIcon,
@@ -128,7 +136,7 @@ class BottomNavBar extends StatelessWidget {
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               color: isSelected ? AppColors.primaryGreen : AppColors.textSecondary,
             ),
-            child: Text(label),
+            child: Text(context.tr(label)),
           ),
         ],
       ),

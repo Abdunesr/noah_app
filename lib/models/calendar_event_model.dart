@@ -6,7 +6,7 @@ class CalendarEvent extends Equatable {
   final int propertyId;
   final String title;
   final String date;
-  final String time;
+  final String? time;
   final String category;
   final String description;
   final int createdByUserId;
@@ -20,7 +20,7 @@ class CalendarEvent extends Equatable {
     required this.propertyId,
     required this.title,
     required this.date,
-    required this.time,
+    this.time,
     required this.category,
     required this.description,
     required this.createdByUserId,
@@ -34,14 +34,14 @@ class CalendarEvent extends Equatable {
     return CalendarEvent(
       id: json['id'] as int,
       propertyId: json['property_id'] as int,
-      title: json['title'] as String,
-      date: json['date'] as String,
-      time: json['time'] as String,
-      category: json['category'] as String,
-      description: json['description'] as String,
-      createdByUserId: json['created_by_user_id'] as int,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      title: json['title'] as String? ?? '',
+      date: json['date'] as String? ?? '',
+      time: json['time'] as String?,
+      category: json['category'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      createdByUserId: json['created_by_user_id'] as int? ?? 0,
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
       property: json['property'] != null
           ? Property.fromJson(json['property'] as Map<String, dynamic>)
           : null,
@@ -96,8 +96,8 @@ class Property {
   final String phone;
   final String email;
   final String established;
-  final String coverImage;
-  final String logo;
+  final String? coverImage;
+  final String? logo;
   final String createdAt;
   final String updatedAt;
 
@@ -112,8 +112,8 @@ class Property {
     required this.phone,
     required this.email,
     required this.established,
-    required this.coverImage,
-    required this.logo,
+    this.coverImage,
+    this.logo,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -121,19 +121,19 @@ class Property {
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
       id: json['id'] as int,
-      name: json['name'] as String,
-      code: json['code'] as String,
-      address: json['address'] as String,
-      city: json['city'] as String,
-      country: json['country'] as String,
-      postalCode: json['postal_code'] as String,
-      phone: json['phone'] as String,
-      email: json['email'] as String,
-      established: json['established'] as String,
-      coverImage: json['cover_image'] as String,
-      logo: json['logo'] as String,
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      name: json['name'] as String? ?? '',
+      code: json['code'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      country: json['country'] as String? ?? '',
+      postalCode: json['postal_code'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      established: json['established'] as String? ?? '',
+      coverImage: json['cover_image'] as String?,
+      logo: json['logo'] as String?,
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
     );
   }
 
@@ -183,14 +183,14 @@ class CreatedBy {
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
     return CreatedBy(
       id: json['id'] as int,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      phone: json['phone'] as String,
-      status: json['status'] as String,
-      lastActiveAt: json['last_active_at'] as String,
+      name: json['name'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      status: json['status'] as String? ?? '',
+      lastActiveAt: json['last_active_at'] as String? ?? '',
       emailVerifiedAt: json['email_verified_at'],
-      createdAt: json['created_at'] as String,
-      updatedAt: json['updated_at'] as String,
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
     );
   }
 
@@ -208,3 +208,4 @@ class CreatedBy {
     };
   }
 }
+

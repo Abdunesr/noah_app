@@ -10,6 +10,7 @@ import '../providers/maintenance_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/property_provider.dart';
 import '../models/maintenance_model.dart';
+import '../widgets/responsive_mockup.dart';
 
 class MaintenanceScreen extends ConsumerStatefulWidget {
   const MaintenanceScreen({super.key});
@@ -73,42 +74,13 @@ class _MaintenanceScreenState extends ConsumerState<MaintenanceScreen> {
     final maintenanceState = ref.watch(maintenanceProvider);
     final authState = ref.watch(authProvider);
 
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(
-      context,
-      maintenanceState,
-      authState,
+    return ResponsiveMockup(
+      child: _buildScreenContent(
+        context,
+        maintenanceState,
+        authState,
+      ),
     );
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022),
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(color: const Color(0xFF8E9196), width: 10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
   }
 
   Widget _buildScreenContent(

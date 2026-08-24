@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/brand_header.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/custom_button.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/responsive_mockup.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -24,45 +26,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(
-          0xFF1E2022,
-        ), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -130,21 +96,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildWelcomeSection() {
-    return const Column(
+    return Column(
       children: [
         Text(
-          'Welcome back',
-          style: TextStyle(
+          context.tr('Welcome back'),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
             color: Color(0xFF0C1D05), // Dark green-black
             letterSpacing: -0.5,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
-          'Manage your assets with confidence',
-          style: TextStyle(
+          context.tr('Manage your assets with confidence'),
+          style: const TextStyle(
             fontSize: 14,
             color: AppColors.textSecondary,
             letterSpacing: 0.1,
@@ -212,7 +178,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       hintText: 'me@company.com',
       prefixIcon: _useGlitchLigatures ? null : Icons.email_outlined,
       prefix: prefixWidget,
-      labelText: 'Email Address',
+      labelText: context.tr('Email Address'),
       labelStyle: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w600,
@@ -227,9 +193,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Password',
-          style: TextStyle(
+        Text(
+          context.tr('Password'),
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: Color(0xFF4B5563),
@@ -240,9 +206,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onTap: () {
             Navigator.pushNamed(context, '/forgot_password');
           },
-          child: const Text(
-            'Forgot Password?',
-            style: TextStyle(
+          child: Text(
+            context.tr('Forgot Password?'),
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryGreen,
@@ -337,13 +303,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           )
         : CustomButton(
-            text: 'Sign In',
+            text: context.tr('Sign In'),
             onPressed: () async {
               final email = _emailController.text.trim();
               final password = _passwordController.text.trim();
 
               if (email.isEmpty || password.isEmpty) {
-                _showCustomSnackBar(context, 'Please fill out all fields');
+                _showCustomSnackBar(context, context.tr('Please fill out all fields'));
                 return;
               }
 
@@ -371,7 +337,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 final errorMessage =
                     ref.read(authProvider).errorMessage ??
                     'Incorrect credential';
-                _showCustomSnackBar(context, errorMessage);
+                _showCustomSnackBar(context, context.tr(errorMessage));
               }
             },
           );

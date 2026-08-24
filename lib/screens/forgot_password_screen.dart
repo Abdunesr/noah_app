@@ -1,8 +1,11 @@
 // lib/screens/forgot_password_screen.dart
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/brand_header.dart';
 import '../widgets/custom_text_field.dart';
+
+import '../widgets/responsive_mockup.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -22,42 +25,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Check screen width for web/desktop mockup responsive wrapping
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -125,22 +95,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildTitleSection() {
-    return const Column(
+    return Column(
       children: [
         Text(
-          'Forgot Password',
-          style: TextStyle(
+          context.tr('Forgot Password'),
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
             color: Color(0xFF0C1D05), // Dark green-black
             letterSpacing: -0.5,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
-          'Enter your email to receive recovery link',
+          context.tr('Enter your email to receive recovery link'),
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: AppColors.textSecondary,
             letterSpacing: 0.1,
@@ -168,9 +138,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Email field header label
-          const Text(
-            'EMAIL ADDRESS',
-            style: TextStyle(
+          Text(
+            context.tr('EMAIL ADDRESS'),
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
               color: Color(0xFF4B5563),
@@ -182,7 +152,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           // Custom Text Field
           CustomTextField(
             controller: _emailController,
-            hintText: 'Enter your email address',
+            hintText: context.tr('Enter your email address'),
             keyboardType: TextInputType.emailAddress,
             prefix: const Padding(
               padding: EdgeInsets.only(left: 16, right: 8),
@@ -208,9 +178,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Send Reset Link',
-                style: TextStyle(
+              child: Text(
+                context.tr('Send Reset Link'),
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
@@ -226,19 +196,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildBackToLoginLink() {
     return GestureDetector(
       onTap: () => Navigator.pop(context),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Remember your password? ',
-            style: TextStyle(
+            context.tr('Remember your password? '),
+            style: const TextStyle(
               fontSize: 13,
               color: AppColors.textSecondary,
             ),
           ),
           Text(
-            'Sign In',
-            style: TextStyle(
+            context.tr('Sign In'),
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryGreen,
@@ -276,8 +246,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final String email = _emailController.text.trim();
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email address'),
+        SnackBar(
+          content: Text(context.tr('Please enter your email address')),
           backgroundColor: Colors.red,
         ),
       );
@@ -286,7 +256,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Recovery link sent to $email'),
+        content: Text('${context.tr('Recovery link sent to ')}$email'),
         backgroundColor: AppColors.primaryGreen,
       ),
     );

@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import '../providers/auth_provider.dart';
 import '../models/user_model.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/app_snackbars.dart';
+import '../widgets/responsive_mockup.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -20,41 +22,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -65,9 +35,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC), // Modern slate white
       appBar: AppBar(
-        title: const Text(
-          'My Profile',
-          style: TextStyle(
+        title: Text(
+          context.tr('My Profile'),
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0F172A),
@@ -242,23 +212,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildAccountDetailsCard(UserModel user) {
     return _buildSectionCard(
-      title: 'Account Settings',
+      title: context.tr('Account Settings'),
       icon: Icons.manage_accounts_outlined,
       children: [
-        _buildInfoRow(Icons.phone_outlined, 'Phone Number', user.phone ?? 'Not provided'),
+        _buildInfoRow(Icons.phone_outlined, context.tr('Phone Number'), user.phone ?? 'Not provided'),
         const Divider(height: 24, thickness: 1, color: Color(0xFFF1F5F9)),
-        _buildInfoRow(Icons.verified_user_outlined, 'Status', user.status),
+        _buildInfoRow(Icons.verified_user_outlined, context.tr('Status'), user.status),
         const Divider(height: 24, thickness: 1, color: Color(0xFFF1F5F9)),
-        _buildInfoRow(Icons.calendar_today_outlined, 'Member Since', _formatDate(user.createdAt)),
+        _buildInfoRow(Icons.calendar_today_outlined, context.tr('Member Since'), _formatDate(user.createdAt)),
         const Divider(height: 24, thickness: 1, color: Color(0xFFF1F5F9)),
-        _buildInfoRow(Icons.access_time_outlined, 'Last Active At', _formatDate(user.lastActiveAt)),
+        _buildInfoRow(Icons.access_time_outlined, context.tr('Last Active At'), _formatDate(user.lastActiveAt)),
       ],
     );
   }
 
   Widget _buildSecuritySettingsCard(BuildContext context) {
     return _buildSectionCard(
-      title: 'Security',
+      title: context.tr('Security'),
       icon: Icons.shield_outlined,
       children: [
         InkWell(
@@ -277,22 +247,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   child: const Icon(Icons.key_outlined, color: Colors.amber, size: 20),
                 ),
                 const SizedBox(width: 14),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Change Password',
-                        style: TextStyle(
+                        context.tr('Change Password'),
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF334155),
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'Update credentials securely.',
-                        style: TextStyle(
+                        context.tr('Update credentials securely.'),
+                        style: const TextStyle(
                           fontSize: 11,
                           color: Color(0xFF64748B),
                         ),
@@ -419,18 +389,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             borderRadius: BorderRadius.circular(14),
           ),
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.logout,
               color: Color(0xFFEF4444),
               size: 20,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
-              'Sign Out Account',
-              style: TextStyle(
+              context.tr('Sign Out Account'),
+              style: const TextStyle(
                 color: Color(0xFFEF4444),
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
@@ -502,16 +472,16 @@ class _ChangePasswordBottomSheetState
         if (success) {
           AppSnackBars.showSuccess(
             context,
-            title: 'Success',
-            message: 'Password updated successfully. 🎉',
+            title: context.tr('Success'),
+            message: context.tr('Password updated successfully. 🎉'),
           );
           Navigator.pop(context);
         } else {
           final error = ref.read(authProvider).errorMessage ?? 'Failed to update password';
           AppSnackBars.showError(
             context,
-            title: 'Error',
-            message: error,
+            title: context.tr('Error'),
+            message: context.tr(error),
           );
         }
       }
@@ -566,9 +536,9 @@ class _ChangePasswordBottomSheetState
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Update Password',
-                    style: TextStyle(
+                  Text(
+                    context.tr('Update Password'),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF0F172A),
@@ -577,9 +547,9 @@ class _ChangePasswordBottomSheetState
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Please enter your current and new passwords below.',
-                style: TextStyle(
+              Text(
+                context.tr('Please enter your current and new passwords below.'),
+                style: const TextStyle(
                   fontSize: 13,
                   color: Color(0xFF64748B),
                 ),
@@ -591,8 +561,8 @@ class _ChangePasswordBottomSheetState
                 controller: _currentPasswordController,
                 obscureText: _obscureCurrent,
                 decoration: InputDecoration(
-                  labelText: 'Current Password',
-                  hintText: 'Enter current password',
+                  labelText: context.tr('Current Password'),
+                  hintText: context.tr('Enter current password'),
                   prefixIcon: const Icon(Icons.lock_open_outlined, color: AppColors.primaryGreen, size: 20),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -619,7 +589,7 @@ class _ChangePasswordBottomSheetState
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your current password';
+                    return context.tr('Please enter your current password');
                   }
                   return null;
                 },
@@ -631,8 +601,8 @@ class _ChangePasswordBottomSheetState
                 controller: _newPasswordController,
                 obscureText: _obscureNew,
                 decoration: InputDecoration(
-                  labelText: 'New Password',
-                  hintText: 'Minimum 8 characters',
+                  labelText: context.tr('New Password'),
+                  hintText: context.tr('Minimum 8 characters'),
                   prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primaryGreen, size: 20),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -659,10 +629,10 @@ class _ChangePasswordBottomSheetState
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a new password';
+                    return context.tr('Please enter a new password');
                   }
                   if (value.length < 8) {
-                    return 'Password must be at least 8 characters';
+                    return context.tr('Password must be at least 8 characters');
                   }
                   return null;
                 },
@@ -674,8 +644,8 @@ class _ChangePasswordBottomSheetState
                 controller: _confirmPasswordController,
                 obscureText: _obscureConfirm,
                 decoration: InputDecoration(
-                  labelText: 'Confirm New Password',
-                  hintText: 'Re-enter new password',
+                  labelText: context.tr('Confirm Password'),
+                  hintText: context.tr('Retype new password'),
                   prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primaryGreen, size: 20),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -702,10 +672,10 @@ class _ChangePasswordBottomSheetState
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please confirm your new password';
+                    return context.tr('Please confirm your password');
                   }
                   if (value != _newPasswordController.text) {
-                    return 'Passwords do not match';
+                    return context.tr('Passwords do not match');
                   }
                   return null;
                 },
@@ -734,9 +704,9 @@ class _ChangePasswordBottomSheetState
                             color: Colors.white,
                           ),
                         )
-                      : const Text(
-                          'Save Settings',
-                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      : Text(
+                          context.tr('Save'),
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),

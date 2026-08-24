@@ -22,6 +22,10 @@ import 'screens/water_meter_screen.dart';
 import 'screens/admin_blocked_screen.dart';
 import 'screens/water_reader_home_screen.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'providers/locale_provider.dart';
+import 'utils/localizations.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
@@ -33,11 +37,13 @@ void main() async {
   );
 }
 
-class GreenParkApp extends StatelessWidget {
+class GreenParkApp extends ConsumerWidget {
   const GreenParkApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.watch(localeProvider);
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -49,6 +55,20 @@ class GreenParkApp extends StatelessWidget {
       title: 'GreenPark Properties',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
+      locale: currentLocale,
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('am', ''),
+        Locale('om', ''),
+      ],
+      localizationsDelegates: const [
+        AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        OromoMaterialLocalizationsDelegate(),
+        OromoCupertinoLocalizationsDelegate(),
+      ],
       home: const SplashScreen(),
       routes: {
         '/login': (context) => const LoginScreen(),

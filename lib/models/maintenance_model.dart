@@ -46,26 +46,47 @@ class MaintenanceRequest {
 
   factory MaintenanceRequest.fromJson(Map<String, dynamic> json) {
     return MaintenanceRequest(
-      id: json['id'],
-      propertyId: json['property_id'],
-      residentId: json['resident_id'],
-      unitId: json['unit_id'],
-      title: json['title'],
-      description: json['description'],
-      category: json['category'],
-      priority: json['priority'],
-      status: json['status'],
-      assigneeUserId: json['assignee_user_id'],
-      requestedAt: DateTime.parse(json['requested_at']),
+      id: json['id'] as int? ?? 0,
+      propertyId: json['property_id'] as int? ?? 0,
+      residentId: json['resident_id'] as int?,
+      unitId: json['unit_id'] as int?,
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      priority: json['priority'] as String? ?? '',
+      status: json['status'] as String? ?? '',
+      assigneeUserId: json['assignee_user_id'] as int?,
+      requestedAt: json['requested_at'] != null 
+          ? DateTime.tryParse(json['requested_at']) ?? DateTime.now()
+          : DateTime.now(),
       resolvedAt: json['resolved_at'] != null
-          ? DateTime.parse(json['resolved_at'])
+          ? DateTime.tryParse(json['resolved_at'])
           : null,
       closedAt: json['closed_at'] != null
-          ? DateTime.parse(json['closed_at'])
+          ? DateTime.tryParse(json['closed_at'])
           : null,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-      property: Property.fromJson(json['property']),
+      createdAt: json['created_at'] != null 
+          ? DateTime.tryParse(json['created_at']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null 
+          ? DateTime.tryParse(json['updated_at']) ?? DateTime.now()
+          : DateTime.now(),
+      property: json['property'] != null
+          ? Property.fromJson(json['property'] as Map<String, dynamic>)
+          : Property(
+              id: 0,
+              name: '',
+              code: '',
+              address: '',
+              city: '',
+              country: '',
+              postalCode: '',
+              phone: '',
+              email: '',
+              established: '',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
       resident: json['resident'],
       unit: json['unit'],
       assignee: json['assignee'],
@@ -96,8 +117,8 @@ class Property {
   final String phone;
   final String email;
   final String established;
-  final String coverImage;
-  final String logo;
+  final String? coverImage;
+  final String? logo;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -112,34 +133,37 @@ class Property {
     required this.phone,
     required this.email,
     required this.established,
-    required this.coverImage,
-    required this.logo,
+    this.coverImage,
+    this.logo,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
-      id: json['id'],
-      name: json['name'],
-      code: json['code'],
-      address: json['address'],
-      city: json['city'],
-      country: json['country'],
-      postalCode: json['postal_code'],
-      phone: json['phone'],
-      email: json['email'],
-      established: json['established'],
-      coverImage: json['cover_image'],
-      logo: json['logo'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? '',
+      code: json['code'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      country: json['country'] as String? ?? '',
+      postalCode: json['postal_code'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      established: json['established'] as String? ?? '',
+      coverImage: json['cover_image'] as String?,
+      logo: json['logo'] as String?,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at']) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.tryParse(json['updated_at']) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
 }
 
 // Paginated response model
-// In maintenance_model.dart - Updated PaginatedResponse class
 class PaginatedResponse<T> {
   final int currentPage;
   final List<T> data;
@@ -175,32 +199,27 @@ class PaginatedResponse<T> {
     Map<String, dynamic> json,
     T Function(Map<String, dynamic>) fromJsonT,
   ) {
-    // FIX: Handle the data list properly
-    final List<dynamic> dataList = json['data'] as List<dynamic>;
+    final List<dynamic> dataList = (json['data'] as List<dynamic>?) ?? [];
     final List<T> typedData = dataList
         .map((item) => fromJsonT(item as Map<String, dynamic>))
         .toList();
 
-    // Create a copy with typed data
-    final Map<String, dynamic> modifiedJson = Map.from(json);
-    modifiedJson['data'] = typedData;
-
     return PaginatedResponse<T>(
-      currentPage: modifiedJson['current_page'] as int,
+      currentPage: json['current_page'] as int? ?? 1,
       data: typedData,
-      firstPageUrl: modifiedJson['first_page_url'] as String?,
-      from: modifiedJson['from'] as int? ?? 0,
-      lastPage: modifiedJson['last_page'] as int,
-      lastPageUrl: modifiedJson['last_page_url'] as String?,
-      links: (modifiedJson['links'] as List<dynamic>)
+      firstPageUrl: json['first_page_url'] as String?,
+      from: json['from'] as int? ?? 0,
+      lastPage: json['last_page'] as int? ?? 1,
+      lastPageUrl: json['last_page_url'] as String?,
+      links: (json['links'] as List<dynamic>? ?? [])
           .map((item) => Link.fromJson(item as Map<String, dynamic>))
           .toList(),
-      nextPageUrl: modifiedJson['next_page_url'] as String?,
-      path: modifiedJson['path'] as String,
-      perPage: modifiedJson['per_page'] as int,
-      prevPageUrl: modifiedJson['prev_page_url'] as String?,
-      to: modifiedJson['to'] as int? ?? 0,
-      total: modifiedJson['total'] as int,
+      nextPageUrl: json['next_page_url'] as String?,
+      path: json['path'] as String? ?? '',
+      perPage: json['per_page'] as int? ?? 20,
+      prevPageUrl: json['prev_page_url'] as String?,
+      to: json['to'] as int? ?? 0,
+      total: json['total'] as int? ?? 0,
     );
   }
 }
@@ -215,10 +234,11 @@ class Link {
 
   factory Link.fromJson(Map<String, dynamic> json) {
     return Link(
-      url: json['url'],
-      label: json['label'],
-      page: json['page'],
-      active: json['active'],
+      url: json['url'] as String?,
+      label: json['label'] as String? ?? '',
+      page: json['page'] as int?,
+      active: json['active'] as bool? ?? false,
     );
   }
 }
+

@@ -2,12 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../utils/colors.dart';
+import '../utils/localizations.dart';
 import '../providers/announcement_provider.dart';
 import '../models/announcement_model.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/shimmer_announcement_card.dart';
 import '../widgets/shimmer_featured_card.dart';
+import '../widgets/responsive_mockup.dart';
 
 class AnnouncementsScreen extends ConsumerStatefulWidget {
   const AnnouncementsScreen({super.key});
@@ -43,38 +45,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022),
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(color: const Color(0xFF8E9196), width: 10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -260,9 +233,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
             constraints: const BoxConstraints(),
           ),
           const SizedBox(width: 16),
-          const Text(
-            'Announcements',
-            style: TextStyle(
+          Text(
+            context.tr('Announcements'),
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryGreen,
@@ -277,9 +250,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Featured',
-          style: TextStyle(
+        Text(
+          context.tr('Featured'),
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0D0F0C),
@@ -344,10 +317,10 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
           color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            'No announcements available',
-            style: TextStyle(color: AppColors.textSecondary),
+            context.tr('No announcements available'),
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
         ),
       );
@@ -402,9 +375,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                       color: const Color(0xFF85B842),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      'UPCOMING EVENT',
-                      style: TextStyle(
+                    child: Text(
+                      context.tr('UPCOMING EVENT'),
+                      style: const TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -423,9 +396,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const Text(
-                        'PINNED',
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('PINNED'),
+                        style: const TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -467,9 +440,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Latest Updates',
-          style: TextStyle(
+        Text(
+          context.tr('Latest Updates'),
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Color(0xFF0D0F0C),
@@ -483,7 +456,7 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
               });
             },
             child: Text(
-              _showAllAnnouncements ? 'Show Less' : 'View All',
+              _showAllAnnouncements ? context.tr('Show Less') : context.tr('View All'),
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
@@ -504,12 +477,12 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
               : announcements);
 
     if (displayAnnouncements.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30),
+          padding: const EdgeInsets.symmetric(vertical: 30),
           child: Text(
-            'No announcements',
-            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+            context.tr('No announcements'),
+            style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
           ),
         ),
       );
@@ -556,17 +529,17 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                         Row(
                           children: [
                             if (announcement.pinned)
-                              const Row(
+                              Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.push_pin,
                                     color: Color(0xFFD32F2F),
                                     size: 14,
                                   ),
-                                  SizedBox(width: 4),
+                                  const SizedBox(width: 4),
                                   Text(
-                                    'PINNED',
-                                    style: TextStyle(
+                                    context.tr('PINNED'),
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFFD32F2F),
@@ -742,9 +715,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                                   color: const Color(0xFFFFEBEC),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
-                                child: const Text(
-                                  'PINNED',
-                                  style: TextStyle(
+                                child: Text(
+                                  context.tr('PINNED'),
+                                  style: const TextStyle(
                                     fontSize: 9,
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFFD32F2F),
@@ -782,7 +755,7 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'Published $publishedTime',
+                          '${context.tr('Published ')}$publishedTime',
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
@@ -889,7 +862,7 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                                   ),
                                 ),
                                 Text(
-                                  'Posted by',
+                                  context.tr('Posted by'),
                                   style: const TextStyle(
                                     fontSize: 11,
                                     color: AppColors.textSecondary,
@@ -939,9 +912,9 @@ class _AnnouncementsScreenState extends ConsumerState<AnnouncementsScreen>
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(
+                  child: Text(
+                    context.tr('Close'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

@@ -5,6 +5,8 @@ import '../utils/colors.dart';
 import 'water_meter_screen.dart';
 import 'profile_screen.dart';
 
+import '../widgets/responsive_mockup.dart';
+
 class WaterReaderHomeScreen extends ConsumerStatefulWidget {
   const WaterReaderHomeScreen({super.key});
 
@@ -22,41 +24,9 @@ class _WaterReaderHomeScreenState extends ConsumerState<WaterReaderHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    Widget screenContent = _buildScreenContent(context);
-
-    if (screenWidth > 500) {
-      return Scaffold(
-        backgroundColor: const Color(0xFF1E2022), // Sleek slate outer background
-        body: Center(
-          child: Container(
-            width: 390,
-            height: 844,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-              border: Border.all(
-                color: const Color(0xFF8E9196), // Outer phone bezel
-                width: 10,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  blurRadius: 30,
-                  offset: const Offset(0, 15),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: screenContent,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return screenContent;
+    return ResponsiveMockup(
+      child: _buildScreenContent(context),
+    );
   }
 
   Widget _buildScreenContent(BuildContext context) {
@@ -67,7 +37,8 @@ class _WaterReaderHomeScreenState extends ConsumerState<WaterReaderHomeScreen> {
         children: _screens,
       ),
       bottomNavigationBar: Container(
-        height: 70,
+        height: 70 + MediaQuery.of(context).padding.bottom,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         decoration: BoxDecoration(
           color: AppColors.primaryWhite,
           boxShadow: [
