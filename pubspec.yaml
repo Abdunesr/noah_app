@@ -21,8 +21,8 @@ dependencies:
   # mobile_scanner: 7.4.0 requires Dart >=3.7.0 → Use 3.0.0
   mobile_scanner: ^3.0.0
   
-  # flutter_riverpod: 3.4.1 requires Dart >=3.7.0 → Use 2.5.1
-  flutter_riverpod: ^2.5.1
+  # flutter_riverpod: 2.6.1 has issues → Use 2.4.0
+  flutter_riverpod: ^2.4.0
   
   http: ^1.6.0
   
