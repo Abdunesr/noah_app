@@ -12,8 +12,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  # Core packages - all compatible with Dart 3.6.0
+  # All packages downgraded to versions compatible with Dart 3.6.0
   cupertino_icons: ^1.0.8
+  
+  # image_picker: 1.2.3 requires Dart >=3.10.0
+  # Use 1.1.2 which works with Dart 3.6.0
+  image_picker: ^1.1.2
+  
   mobile_scanner: ^7.4.0
   flutter_riverpod: ^3.4.1
   http: ^1.6.0
@@ -21,21 +26,25 @@ dependencies:
   qr_flutter: ^4.1.0
   equatable: ^2.1.0
   go_router: ^17.3.0
-  image_picker: ^1.2.3
-  permission_handler: ^12.0.3
+  
+  # permission_handler: 12.0.3 requires Dart >=3.10.0
+  # Use 11.3.1 which works with Dart 3.6.0
+  permission_handler: ^11.3.1
+  
   intl: ^0.20.2
   awesome_snackbar_content: ^0.1.1
   shimmer: ^3.0.0
   
-  # DOWNGRADED: share_plus from ^13.3.0 to ^10.0.0
+  # share_plus: 13.3.0 requires Dart >=3.10.0
+  # Use 10.0.0 which works with Dart 3.6.0
   share_plus: ^10.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # DOWNGRADED: flutter_lints from ^4.0.0 to ^3.0.0
-  # or use ^2.0.0 for even more compatibility
+  # flutter_lints: 4.0.0 requires Dart >=3.8.0
+  # Use 3.0.0 which works with Dart 3.6.0
   flutter_lints: ^3.0.0
 
 flutter:
